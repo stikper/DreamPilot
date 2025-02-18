@@ -1,0 +1,72 @@
+menu "DreamPilot Configuration"
+
+    orsource "$IDF_PATH/examples/common_components/env_caps/$IDF_TARGET/Kconfig.env_caps"
+
+    menu "GPS Configuration"
+        config GPS_UART_PORT_NUM
+            int "UART port number"
+            range 0 2
+            default 2
+            help
+                UART communication port number for the GPS.
+                See UART documentation for available port numbers.
+
+        config GPS_UART_BAUD_RATE
+            int "UART communication speed"
+            range 1200 115200
+            default 9600
+            help
+                UART communication speed for GPS.
+
+        config GPS_UART_RXD
+            int "UART RXD pin number"
+            range ENV_GPIO_RANGE_MIN ENV_GPIO_IN_RANGE_MAX
+            default 16
+            help
+                GPIO number for UART RX pin. See UART documentation for more information
+                about available pin numbers for UART.
+
+        config GPS_UART_TXD
+            int "UART TXD pin number"
+            range ENV_GPIO_RANGE_MIN ENV_GPIO_OUT_RANGE_MAX
+            default 17
+            help
+                GPIO number for UART TX pin. See UART documentation for more information
+                about available pin numbers for UART.
+
+        config GPS_UART_BUFFER_SIZE
+            int "GPS UART buffer size"
+            range 1024 16384
+            default 1024
+            help
+                Defines size for UART buffer.
+
+        config GPS_QUEUE_SIZE
+            int "GPS UART event queue size"
+            range 10 20
+            default 16
+            help
+                Defines size for UART event queue.
+
+        config GPS_TASK_STACK_SIZE
+            int "GPS task stack size"
+            range 1024 16384
+            default 4096
+            help
+                Defines stack size for GPS update task. Insufficient stack size can cause crash.
+        config GPS_TASK_PRIORITY
+            int "GPS task priority"
+            range 1 20
+            default 12
+            help
+                Defines priority for GPS update task.
+
+        config GPS_BUFFER_SIZE
+            int "GPS UART buffer size"
+            range 1 100
+            default 10
+            help
+                Defines size for GPS data buffer.
+    endmenu
+
+endmenu
