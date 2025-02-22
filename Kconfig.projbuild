@@ -67,6 +67,12 @@ menu "DreamPilot Configuration"
             default 10
             help
                 Defines size for GPS data buffer.
+
+        config GPS_CHECKSUM
+                    bool "NMEA CHECKSUM"
+                    default y
+                    help
+                        Control NMEA integrity.
     endmenu
 
 endmenu
