@@ -10,7 +10,7 @@
 
 static auto TAG = "DreamPilot";
 
-extern "C" _Noreturn void app_main(void)
+extern "C" void app_main(void)
 {
     esp_log_level_set("*", ESP_LOG_INFO);
     esp_log_level_set("GPS", ESP_LOG_INFO);
@@ -18,7 +18,6 @@ extern "C" _Noreturn void app_main(void)
     std::cout << "Hello, World!" << std::endl;
     IGPSModule *gps = new NEO6M();
     gps->start();
-
     while (true)
     {
         gps->printLastData();

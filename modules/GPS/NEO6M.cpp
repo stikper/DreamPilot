@@ -169,10 +169,10 @@ void NEO6M::processPattern()
 
         const int read_len = uart_read_bytes(cfg.uart_port_num, uart_buffer, pos + 1, pdMS_TO_TICKS(200));
         uart_buffer[read_len] = '\0';
-        const auto nmea = std::string(uart_buffer);
+        const auto* nmea_ptr = new std::string(uart_buffer);
 
         // TODO: is it works?
-        xQueueSend(nmeaQueue, &nmea, 0);
+        xQueueSend(nmeaQueue, &nmea_ptr, 0);
     }
     else
     {
@@ -192,19 +192,20 @@ void NEO6M::nmeaTaskWrapper(void* param)
 
 _Noreturn void NEO6M::processNMEA()
 {
-    std::string nmea;
+    std::string* nmea_ptr;
 
     while (true)
     {
         //Waiting for UART event.
-        if (running && xQueueReceive(nmeaQueue, &nmea, pdMS_TO_TICKS(200)) == pdTRUE)
+        if (running && xQueueReceive(nmeaQueue, &nmea_ptr, pdMS_TO_TICKS(200)) == pdTRUE)
         {
+            std::string nmea(*nmea_ptr);
+            delete nmea_ptr;
             using GPSData = IGPSModule::GPSData;
             //TODO Add try catch
             GPSData newData = NMEAParser::parse(nmea);
             updateData(newData);
         }
-        vTaskDelay(pdMS_TO_TICKS(10));
         vTaskDelay(pdMS_TO_TICKS(10));
     }
     vTaskDelete(nullptr);
@@ -219,7 +220,7 @@ esp_err_t NEO6M::start()
     esp_err_t ret;
 
     ESP_LOGI(TAG.data(), "Initializing NMEA Queue...");
-    nmeaQueue = xQueueCreate(10, sizeof(std::string));
+    nmeaQueue = xQueueCreate(10, sizeof(void*));
     const BaseType_t xReturned_1 = xTaskCreate(
         nmeaTaskWrapper,
         "nmea_parsing_task",
