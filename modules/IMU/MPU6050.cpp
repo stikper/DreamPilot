@@ -118,7 +118,7 @@ esp_err_t MPU6050::configMPU6050() const
 
     // Config gyroscope
     buf[0] = 0x1B;
-    buf[1] = cfg.accel_scale << 3;
+    buf[1] = cfg.gyro_scale << 3;
     ret = i2c_master_transmit(dev_handle, buf, 2, -1);
     if (ret != ESP_OK) return ret;
 
@@ -153,7 +153,7 @@ esp_err_t MPU6050::getData()
     accel[1] = static_cast<float>(ay) / accel_div * 9.81f;
     accel[2] = static_cast<float>(az) / accel_div * 9.81f;
 
-    const float gyro_div = 131.0f / powf(2.0f, cfg.accel_scale);
+    const float gyro_div = 131.0f / powf(2.0f, cfg.gyro_scale);
     gyro[0] = static_cast<float>(gx) / gyro_div;
     gyro[1] = static_cast<float>(gy) / gyro_div;
     gyro[2] = static_cast<float>(gz) / gyro_div;
