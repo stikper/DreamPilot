@@ -42,6 +42,7 @@ IGPSModule::Position IGPSModule::getPos() const
     {
         result = lastPos;
         xSemaphoreGive(lastPos.dataMutex);
+        result.dataMutex = nullptr;
         return result;
     }
     return result;
@@ -55,6 +56,7 @@ IGPSModule::Velocity IGPSModule::getVel() const
     {
         result = lastVel;
         xSemaphoreGive(lastVel.dataMutex);
+        result.dataMutex = nullptr;
         return result;
     }
     return result;
@@ -68,6 +70,7 @@ IGPSModule::Altitude IGPSModule::getAlt() const
     {
         result = lastAlt;
         xSemaphoreGive(lastAlt.dataMutex);
+        result.dataMutex = nullptr;
         return result;
     }
     return result;
@@ -81,6 +84,7 @@ IGPSModule::TimeDate IGPSModule::getTime() const
     {
         result = lastTime;
         xSemaphoreGive(lastTime.dataMutex);
+        result.dataMutex = nullptr;
         return result;
     }
     return result;

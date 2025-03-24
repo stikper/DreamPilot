@@ -25,7 +25,7 @@ NEO6M::NEO6M(): cfg{}
     cfg.uart_queue_size = 16;
     cfg.uart_rxd = 16;
     cfg.uart_txd = 17;
-    cfg.uart_task_stack_size = 4096;
+    cfg.uart_task_stack_size = 2048;
     cfg.uart_task_priority = 12;
     cfg.nmea_task_stack_size = 4096;
     cfg.nmea_task_priority = 13;
@@ -41,6 +41,7 @@ NEO6M::NEO6M(): cfg{}
     nmeaQueue = nullptr;
     uart_task_handle = nullptr;
     nmea_task_handle = nullptr;
+
     running = false;
 
     ESP_LOGI(TAG.data(), "Module is ready to start!");
@@ -103,9 +104,6 @@ void NEO6M::uartTaskWrapper(void* param)
 
     // Start processUART function in task
     gps->processUART();
-
-    // Remove current task
-    vTaskDelete(nullptr);
 }
 
 // ReSharper disable CppDFAUnreachableFunctionCall
@@ -152,7 +150,6 @@ _Noreturn void NEO6M::processUART()
         }
         vTaskDelay(pdMS_TO_TICKS(10));
     }
-    vTaskDelete(nullptr);
 }
 
 void NEO6M::processPattern()
@@ -186,8 +183,6 @@ void NEO6M::nmeaTaskWrapper(void* param)
     auto* gps = static_cast<NEO6M*>(param);
 
     gps->processNMEA();
-
-    vTaskDelete(nullptr);
 }
 
 _Noreturn void NEO6M::processNMEA()
@@ -208,7 +203,6 @@ _Noreturn void NEO6M::processNMEA()
         }
         vTaskDelay(pdMS_TO_TICKS(10));
     }
-    vTaskDelete(nullptr);
 }
 
 esp_err_t NEO6M::start()
