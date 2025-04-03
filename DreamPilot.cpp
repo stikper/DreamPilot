@@ -30,6 +30,6 @@ extern "C" void app_main(void)
     {
         gps->printLastData();
         imu->printLastData();
-        vTaskDelay(pdMS_TO_TICKS(10));
+        vTaskDelay(pdMS_TO_TICKS(1000));
     }
 }

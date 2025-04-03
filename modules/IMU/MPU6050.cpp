@@ -25,7 +25,7 @@ MPU6050::MPU6050(): cfg{}
     cfg.i2c_port_num = I2C_NUM_0;
     cfg.i2c_sda = GPIO_NUM_18;
     cfg.i2c_scl = GPIO_NUM_5;
-    cfg.rate = 1000;
+    cfg.rate = 100;
     cfg.imu_task_priority = 11;
     cfg.imu_task_stack_size = 4096;
     cfg.accel_scale = 3; // ±8g
@@ -133,7 +133,9 @@ esp_err_t MPU6050::getData()
 
     uint8_t data[14];
     uint8_t data_reg = 0x3B;
-    esp_err_t ret = i2c_master_transmit_receive(dev_handle, &data_reg, 1, data, 14, 100);
+    //TODO!!! FIX CRASHES
+    //TODO!!! Interrupt wdt timeout on CPU0
+    esp_err_t ret = i2c_master_transmit_receive(dev_handle, &data_reg, 1, data, 14, 10);
     if (ret != ESP_OK) return ret;
 
     int64_t timestamp = esp_timer_get_time();
